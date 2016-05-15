@@ -118,3 +118,24 @@ Matrix Matrix::operator/(const Matrix& other) {
 	}
 	return ret;
 }
+
+std::pair<int, int> Matrix::getMinRowCol()
+{
+	if(rows<=0 || cols<=0) return std::make_pair(-1, -1);
+	std::pair<int, int> ret(0, 0);
+	int minVal = mat[0][0];
+	for(int row=0; row<rows; ++row){
+		for(int col=0; col<cols; ++col){
+			if(minVal > mat[row][col]){
+				minVal = mat[row][col];
+				ret.first = row;
+				ret.second = col;
+			}
+		}
+	}
+	return ret;
+}
+bool Matrix::isIn(int row, int col)
+{
+	return row>=0 && row<rows && col>=0 && col<cols;
+}
