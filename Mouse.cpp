@@ -24,142 +24,40 @@ void Mouse::routing()
 	path min;
 	min.value = MAX_COUNT;
 
-	for(i = 0; i < 3; i++)
+	for(i = -1; i <= 1; i++)
 	{
-		switch(i)
+		for(j = -1; j <= 1; j++)
 		{
-		case 0:
-			if( ( this->map.getValue(curX, curY + 1) == MAP_WALL))//벽일 때
+			if( i + j == 1 || i + j == -1)
 			{
-				this->map.setInitValue(MAP_WALL);
-				this->map.resize(curX, curY + 1);
-
-			}
-			else//벽이 아닐
-			{
-				this->map.setInitValue(this->map.getValue(curX, curY + 1));
-				this->map.resize(curX, curY + 1);
-			}
-			if(min.value > this->moveCount.getValue(curX, curY + 1))
-			{
-				min.value = this->moveCount.getValue(curX, curY + 1);
-				min.x = curX;
-				min.y = curY + 1;
-			}
-
-				min.value = this->moveCount.getValue(curX, curY + 1);
-				min.x = curX;
-				min.y = curY + 1;
-			break;
-
-		case 1:
-			if(curX - 1 < 0)
-			{
-				printf("out of array\n");
-				exit(1);
-			}
-
-			if((this->map.getValue(curX - 1, curY) == MAP_WALL))
-			{
-				this->map.setInitValue(MAP_WALL);
-				this->map.resize(curX - 1, curY);
-			}
-			else
-			{
-				this->map.setInitValue(this->map.getValue(curX - 1, curY));
-				this->map.resize(curX - 1, curY);
-			}
-
-			if(min.value > this->moveCount.getValue(curX - 1, curY))
-			{
-				min.value = this->moveCount.getValue(curX - 1, curY);
-				min.x = curX - 1;
-				min.y = curY;
-			}
-			else if(min.value == this->moveCount.getValue(curX - 1, curY))
-			{
-				srand(time(NULL));
-				if(rand() % 2 == 1)
+				if( ( this->maze[curX + i][curY + j] == MAP_WALL))//벽일 때
+					map[curX + i][curY + j] = MAP_WALL;//access error일어나지 않을까...?
+				else//벽이 아닐떄
+					map[curX + i][curY + j] = maze[curX + i][curY + j];//input maze data to map array
+				if(min.value > moveCount[curX + i][curY + j])//decide which block has minimum value
 				{
-					min.value = this->moveCount.getValue(curX - 1, curY);
-					min.x = curX - 1;
-					min.y = curY;
+					min.value = moveCount[curX + i][curY + j];
+					min.x = curX + i;
+					min.y = curY + j;
 				}
-				else
-					min = min;				
-			}
-			break;
-
-		case 2:
-			if( (this->map.getValue(curX + 1, curY) == MAP_WALL))
-			{
-				this->map.setInitValue(MAP_WALL);
-				this->map.resize(curX + 1, curY);
-			}
-			else
-			{
-				this->map.setInitValue(this->map.getValue(curX + 1, curY));
-				this->map.resize(curX + 1, curY);
-			}
-			if(min.value > this->moveCount.getValue(curX + 1, curY))
-			{
-				min.value = this->moveCount.getValue(curX + 1, curY);
-				min.x = curX + 1;
-				min.y = curY;
-			}
-			else if(min.value == this->moveCount.getValue(curX + 1, curY))
-			{
-				srand(time(NULL));
-				if(rand() % 2 == 1)
+				else if(min.value == map[curX + i][curY + j])//if there is 2 minimum value in the 4 block
 				{
-					min.value = this->moveCount.getValue(curX + 1, curY);
-					min.x = curX + 1;
-					min.y = curY;
+					srand(time(NULL));
+					if(rand() % 2 == 1)//make 0 or 1 to decide randomly blocks which have same value 
+					{
+						min.value = moveCount[curX + i][curY + j];
+						min.x = curX + i;
+						min.y = curY + j;
+					}
+					else
+						min = min;
 				}
-				else
-					min = min;			
 			}
-			break;
-
-		case 3:
-			if(curY - 1 < 0)
-			{
-				printf("out of array\n");
-				exit(1);
-			}
-
-			if(this->map.getValue(curX, curY - 1) == MAP_WALL )
-			{
-				this->map.setInitValue(MAP_WALL);
-				this->map.resize(curX, curY - 1);
-			}
-			else
-			{
-				this->map.setInitValue(this->map.getValue(curX, curY - 1));
-				this->map.resize(curX, curY - 1);
-			}
-			if(min.value > this->moveCount.getValue(curX, curY - 1))
-			{
-				min.value = this->moveCount.getValue(curX, curY - 1);
-				min.x = curX;
-				min.y = curY - 1;
-			}
-
-			else if(min.value == this->moveCount.getValue(curX, curY - 1))
-			{
-				srand(time(NULL));
-				if(rand() % 2 == 1)
-				{
-					min.value = this->moveCount.getValue(curX, curY - 1);
-					min.x = curX;
-					min.y = curY - 1;
-				}
-				else
-					min = min;			
-			}
-			break;
+			else//if i + j != 1 or -1
+				continue;
 		}
 	}
+
 
 	this->moveCount.setInitValue((this->moveCount.getValue(curX, curY))++);
 	this->moveCount.resize(curX, curY);
