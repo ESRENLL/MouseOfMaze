@@ -1,7 +1,7 @@
 #pragma once
 
-// Çà·ÄÀ» Ç¥ÇöÇÏ´Â Å¬·¡½º
-// ¿¬»êÀÚ ¿À¹ö·Îµù°ú Å©±âÀçÁ¶Á¤ ±â´É
+// í–‰ë ¬ì„ í‘œí˜„í•˜ëŠ” í´ë˜ìŠ¤
+// ì—°ì‚°ì ì˜¤ë²„ë¡œë”©ê³¼ í¬ê¸°ì¬ì¡°ì • ê¸°ëŠ¥
 
 class Matrix
 {
@@ -25,9 +25,11 @@ public:
 		free();
 	}
 	void resize(int rows, int cols);
+private:
 	void resizeRows(int rows);
 	void resizeCols(int cols);
 	void free();
+public:
 	int getRows();
 	int getCols();
 	void setInitValue(int val);
