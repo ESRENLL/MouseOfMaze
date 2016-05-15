@@ -8,6 +8,7 @@ private:
 	const Matrix maze;
 	Matrix map; // enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 	Matrix moveCount; // 이동한 횟수(default 0)
+	Matrix maze;
 	int curX;
 	int curY;
 	int health;
