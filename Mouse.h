@@ -4,20 +4,21 @@
 #include "MouseJR.h"
 
 class Mouse {
-protected:
+private:
+	const Matrix maze;
 	Matrix map; // enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
-	Matrix moveCount; // ÀÌµ¿ÇÑ È½¼ö(default 0)
+	Matrix moveCount; // ì´ë™í•œ íšŸìˆ˜(default 0)
 	int curX;
 	int curY;
 	int health;
 	int mana;
 public:
-	Mouse(int health) : map(), curX(1), curY(0), health(health), mana(0) {}
+	Mouse(const Matrix maze) : maze(maze), map(), curX(1), curY(0), health(2*maze.getRows()*maze.getCols()), mana(0) {}
 	~Mouse() {}
-	void routing(); // ±æÃ£±â(½ºÄµ °í·Áx), move
-	void consumeMana(); // ½ºÄµ Àå¼Ò °í·Á, ½ºÄµ
-	void move(int dx, int dy); // ÀÌµ¿ ÈÄ ¸Ê(+moveCount, health, mana, x, y) °»½Å
-	void scan(int x, int y); // ½ºÄµ ÈÄ ¸Ê ¹× ¸¶³ª °»½Å
-	int getX(); // ÀÚ½ÅÀÇ ÇöÀçÀ§Ä¡ x¸¦ ¹İÈ¯
-	int getY(); // ÀÚ½ÅÀÇ ÇöÀçÀ§Ä¡ y¸¦ ¹İÈ¯
+	void routing(); // ê¸¸ì°¾ê¸°(ìŠ¤ìº” ê³ ë ¤x), move
+	void consumeMana(); // ìŠ¤ìº” ì¥ì†Œ ê³ ë ¤, ìŠ¤ìº”
+	void move(int dx, int dy); // ì´ë™ í›„ ë§µ(+moveCount, health, mana, x, y) ê°±ì‹ 
+	void scan(int x, int y); // ìŠ¤ìº” í›„ ë§µ ë° ë§ˆë‚˜ ê°±ì‹ 
+	int getX(); // ìì‹ ì˜ í˜„ì¬ìœ„ì¹˜ xë¥¼ ë°˜í™˜
+	int getY(); // ìì‹ ì˜ í˜„ì¬ìœ„ì¹˜ yë¥¼ ë°˜í™˜
 };
