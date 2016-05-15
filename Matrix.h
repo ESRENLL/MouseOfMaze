@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 // 행렬을 표현하는 클래스
 // 연산자 오버로딩과 크기재조정 기능
 
@@ -40,4 +42,6 @@ public:
 	Matrix operator+(const Matrix& other);
 	Matrix operator-(const Matrix& other);
 	Matrix operator/(const Matrix& other);
+	pair<int, int> getMinRowCol(); // <row, col>
+	bool isIn(int row, int col);
 };
