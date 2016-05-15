@@ -7,9 +7,9 @@
 #define MAX_COUNT 9999
 enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 
-//¹®Á¦ 1: this->map.getValue(curX, curY + 1) << ÇÔ¼ö ¾²´Â¹ý
-//¹®Á¦ 2: ÇöÀçÀ§Ä¡¿¡¼­ »ç¹æÀÇ Å¸ÀÏÀÇ °ªÀ» ÀÐ¾î¾ßÇÏ´Âµ¥, ÀüÃ¼ ¸ÊÀ» ÀúÀåÇÑ ¹è¿­À» ¾î¶»°Ô ºÒ·¯¿Í¾ß...
-//¹®Á¦ 3: exitÀ» ±¸ºÐÇÏ´Â ¹æ¹ý
+//ë¬¸ì œ 1: this->map.getValue(curX, curY + 1) << í•¨ìˆ˜ ì“°ëŠ”ë²•
+//ë¬¸ì œ 2: í˜„ìž¬ìœ„ì¹˜ì—ì„œ ì‚¬ë°©ì˜ íƒ€ì¼ì˜ ê°’ì„ ì½ì–´ì•¼í•˜ëŠ”ë°, ì „ì²´ ë§µì„ ì €ìž¥í•œ ë°°ì—´ì„ ì–´ë–»ê²Œ ë¶ˆëŸ¬ì™€ì•¼...
+//ë¬¸ì œ 3: exitì„ êµ¬ë¶„í•˜ëŠ” ë°©ë²•
 
 void Mouse::routing()
 {
@@ -29,13 +29,13 @@ void Mouse::routing()
 		switch(i)
 		{
 		case 0:
-			if( ( this->map.getValue(curX, curY + 1) == MAP_WALL))//º®ÀÏ ¶§
+			if( ( this->map.getValue(curX, curY + 1) == MAP_WALL))//ë²½ì¼ ë•Œ
 			{
 				this->map.setInitValue(MAP_WALL);
 				this->map.resize(curX, curY + 1);
 
 			}
-			else//º®ÀÌ ¾Æ´Ò‹š
+			else//ë²½ì´ ì•„ë‹Â‹Âš
 			{
 				this->map.setInitValue(this->map.getValue(curX, curY + 1));
 				this->map.resize(curX, curY + 1);
@@ -169,17 +169,19 @@ void Mouse::routing()
 void Mouse::move(int dx, int dy)
 {
 	
-	this->curX = dx;
-	this->curY = dy;
+	this->curX = this->curX + dx;
+	this->curY = this->curY + dy;
 	this->mana++;
 	this->health--;
-	if(this->health < 1)
+	
+	if(curX==0 || (curY==0 && curX!=1) || curX==map.getCols()-1 || curY==map.getRows()-1){
+		// process when arrive the exit
+	}
+	else if(this->health <= 0)
 	{	
 		printf("We failed to find the exit...\n");
 		exit(100);
 	}
-	//when the mouse arrive at the eixt, need to know there is exit or not... how?
-
 }
 
 void Mouse::scan(int x, int y)
