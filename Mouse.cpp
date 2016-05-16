@@ -10,7 +10,7 @@ enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 //문제 1: this->map.getValue(curX, curY + 1) << 함수 쓰는법
 //문제 2: 현재위치에서 사방의 타일의 값을 읽어야하는데, 전체 맵을 저장한 배열을 어떻게 불러와야...
 //문제 3: exit을 구분하는 방법
-
+//define where is conjuction
 void Mouse::routing()
 {
 	typedef struct possiblePath
