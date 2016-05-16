@@ -58,16 +58,16 @@ void Matrix::free() {
 	colsCap = 0;
 	mat = 0;
 }
-int Matrix::getRows(){
+int Matrix::getRows() const{
 	return rows;
 }
-int Matrix::getCols(){
+int Matrix::getCols() const{
 	return cols;
 }
 void Matrix::setInitValue(int val){
 	initVal = val;
 }
-int Matrix::getInitValue(){
+int Matrix::getInitValue() const {
 	return initVal;
 }
 Matrix& Matrix::operator=(const Matrix& other) {
@@ -80,6 +80,9 @@ Matrix& Matrix::operator=(const Matrix& other) {
 	return *this;
 }
 int* Matrix::operator[](int n){
+	return mat[n];
+}
+const int* Matrix::operator[](int n) const {
 	return mat[n];
 }
 Matrix Matrix::operator*(const Matrix& other) { // sumproduct
@@ -119,7 +122,7 @@ Matrix Matrix::operator/(const Matrix& other) {
 	return ret;
 }
 
-std::pair<int, int> Matrix::getMinRowCol()
+std::pair<int, int> Matrix::getMinRowCol() const
 {
 	if(rows<=0 || cols<=0) return std::make_pair(-1, -1);
 	std::pair<int, int> ret(0, 0);
@@ -135,7 +138,7 @@ std::pair<int, int> Matrix::getMinRowCol()
 	}
 	return ret;
 }
-bool Matrix::isIn(int row, int col)
+bool Matrix::isIn(int row, int col) const
 {
 	return row>=0 && row<rows && col>=0 && col<cols;
 }

@@ -32,16 +32,17 @@ private:
 	void resizeCols(int cols);
 	void free();
 public:
-	int getRows();
-	int getCols();
+	int getRows() const;
+	int getCols() const;
 	void setInitValue(int val);
-	int getInitValue();
+	int getInitValue() const;
 	Matrix& operator=(const Matrix& other);
 	int* operator[](int n);
+	const int* operator[](int n) const;
 	Matrix operator*(const Matrix& other); // sumproduct
 	Matrix operator+(const Matrix& other);
 	Matrix operator-(const Matrix& other);
 	Matrix operator/(const Matrix& other);
-	pair<int, int> getMinRowCol(); // <row, col>
-	bool isIn(int row, int col);
+	std::pair<int, int> getMinRowCol() const; // <row, col>
+	bool isIn(int row, int col) const;
 };
