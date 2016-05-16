@@ -19,7 +19,7 @@ void Mouse::routing()
 		int y;
 		int value;
 	}path;
-	int i;
+	int i, j;
 	int num = 0;
 	path min;
 	min.value = MAX_COUNT;
@@ -59,9 +59,16 @@ void Mouse::routing()
 	}
 
 
-	this->moveCount.setInitValue((this->moveCount.getValue(curX, curY))++);
-	this->moveCount.resize(curX, curY);
+	//this->moveCount.setInitValue((this->moveCount.getValue(curX, curY))++);
+	//this->moveCount.resize(curX, curY);
+	++moveCount[min.y][min.x];
 	move(min.x, min.y);
+}
+
+std::pair<int, int> Mouse::howToGo(int x, int y)
+{
+	// return dx, dy
+	return std::make_pair(0, 0); // dummy
 }
 
 void Mouse::move(int dx, int dy)
@@ -72,7 +79,7 @@ void Mouse::move(int dx, int dy)
 	this->mana++;
 	this->health--;
 	
-	if(curX==0 || (curY==0 && curX!=1) || curX==map.getCols()-1 || curY==map.getRows()-1){
+	if(escapeMaze()){
 		// process when arrive the exit
 	}
 	else if(this->health <= 0)
@@ -100,4 +107,9 @@ int Mouse::getX()
 int Mouse::getY()
 {
 	return this->curY;	
+}
+
+bool Mouse::escapeMaze()
+{
+	return curX==0 || (curY==0 && curX!=1) || curX==map.getCols()-1 || curY==map.getRows()-1;
 }
