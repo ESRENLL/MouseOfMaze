@@ -3,6 +3,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdio.h>
+#include <stack>
+#include <cmath>
 
 #define MAX_COUNT 9999
 enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
@@ -68,7 +70,52 @@ void Mouse::routing()
 std::pair<int, int> Mouse::howToGo(int x, int y)
 {
 	// return dx, dy
-	return std::make_pair(0, 0); // dummy
+
+	if(curX==x && curY==y) return std::make_pair(0,0);
+
+	const int beginCount = 10000;
+	const int dir[4][2] = { {1,0}, {0,1}, {-1,0}, {0,-1} }; // direction, (x,y)
+	std::stack< std::pair<int, int> > begin, next; // next (x,y)
+	Matrix mapClone = map;
+
+	// find (x,y)
+	begin.push(std::make_pair(curX, curY));
+	mapClone[curX][curY] = beginCount;
+	while(true){
+		if(begin.empty()) return std::make_pair(0, 0); // cannot
+		
+		while(!begin.empty()) {
+			std::pair<int, int> top = begin.top();
+			if(top.first==x && top.second==y) break;
+			begin.pop();
+			for(int d=0; d<4; ++d) {
+				int tx = top.first+dir[d][0];
+				int ty = top.second+dir[d][1];
+				if(mapClone.isIn(ty,tx) && mapClone[ty][tx]==MAP_EMPTY) {
+					next.push(std::make_pair(tx,ty));
+					mapClone[ty][tx] = mapClone[top.second][top.first]+1;
+				}
+			}
+		}
+		if(!begin.empty()) break;
+		begin.swap(next);
+	}
+	
+	// back from (x,y)
+	int backX = x;
+	int backY = y;
+	while(abs(backX-curX)+abs(backY-curY)!=1) {
+		for(int d=0; d<4; ++d) {
+			int tx = backX+dir[d][0];
+			int ty = backY+dir[d][1];
+			if(mapClone.isIn(ty,tx) && mapClone[ty][tx]==mapClone[backY][backX]-1) {
+				backX = tx;
+				backY = ty;
+				break;
+			}
+		}
+	}
+	return std::make_pair(backX-curX, backY-curY);
 }
 
 void Mouse::move(int dx, int dy)
