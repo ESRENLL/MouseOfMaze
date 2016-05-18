@@ -138,6 +138,22 @@ std::pair<int, int> Matrix::getMinRowCol() const
 	}
 	return ret;
 }
+std::pair<int, int> Matrix::getMaxRowCol() const
+{
+	if(rows<=0 || cols<=0) return std::make_pair(-1, -1);
+	std::pair<int, int> ret(0, 0);
+	int maxVal = mat[0][0];
+	for(int row=0; row<rows; ++row){
+		for(int col=0; col<cols; ++col){
+			if(maxVal < mat[row][col]){
+				maxVal = mat[row][col];
+				ret.first = row;
+				ret.second = col;
+			}
+		}
+	}
+	return ret;
+}
 bool Matrix::isIn(int row, int col) const
 {
 	return row>=0 && row<rows && col>=0 && col<cols;

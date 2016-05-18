@@ -44,5 +44,6 @@ public:
 	Matrix operator-(const Matrix& other);
 	Matrix operator/(const Matrix& other);
 	std::pair<int, int> getMinRowCol() const; // <row, col>
+	std::pair<int, int> getMaxRowCol() const; // <row, col>
 	bool isIn(int row, int col) const;
 };
