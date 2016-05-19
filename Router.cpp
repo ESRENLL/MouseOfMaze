@@ -5,13 +5,14 @@
 
 #define MAX_COUNT 9999
 
-std::pair<int, int> routing(const Matrix& map, const Matrix& moveCount, int curX, int curY)
-{
-	// ADD : Matrix predictedValue = predictAlgo1 * predictAlgo2 * predictAlgo3;
-	Matrix predictedValue;
-	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
-	return std::make_pair(maxRowCol.second, maxRowCol.first);
-}
+// LNK2019 빌드에러 발생으로 헤더 파일로 코드 이동
+//std::pair<int, int> routing(const Matrix& map, const Matrix& moveCount, int curX, int curY)
+//{
+//	// ADD : Matrix predictedValue = predictAlgo1 * predictAlgo2 * predictAlgo3;
+//	Matrix predictedValue;
+//	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
+//	return std::make_pair(maxRowCol.second, maxRowCol.first);
+//}
 
 //define where is conjuction
 std::pair<int, int> Router::simpleRouting(const Matrix& map, const Matrix& moveCount, int curX, int curY)

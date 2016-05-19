@@ -12,7 +12,7 @@ private:
 	Matrix map; // enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 	Matrix moveCount; // 이동한 횟수(default 0)
 	Router router;
-	MouseJR jr;
+	//MouseJR jr;
 	int curX;
 	int curY;
 	int health;

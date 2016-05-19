@@ -12,6 +12,7 @@ int main(void)
 	Matrix maze;
 	while( !readMaze(maze) );
 
+	cout << "rows, cols : " << maze.getRows() << ", " << maze.getCols() << endl;
 	for(int row=0; row<maze.getRows(); ++row){
 		for(int col=0; col<maze.getCols(); ++col)
 			cout << maze[row][col] << ' ';
@@ -33,19 +34,20 @@ bool readMaze(Matrix& maze)
 		cout << "file open error! exit program...\n";
 		return false;
 	}
-	Matrix maze;
 	int curRow=0, curCol=0;
 	string line;
 	while( getline(ifs,line) ) {
+		curCol = 0;
+		maze.resize(curRow+1, maze.getCols());
 		for(int i=0; i<line.size(); ++i){
 			if(line[i]=='0' || line[i]=='1'){
-				maze.resize(curRow+1, curCol+1);
+				if(maze.getCols() <= curCol)
+					maze.resize(curRow+1, curCol+1);
 				maze[curRow][curCol] = line[i]-'0';
 				++curCol;
 			}
 		}
 		++curRow;
-		curCol = 0;
 	}
 	ifs.close();
 	return true;
