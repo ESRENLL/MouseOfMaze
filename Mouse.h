@@ -21,6 +21,9 @@ public:
 	Mouse(const Matrix& maze) : maze(maze), map(), curX(1), curY(0), health(2*maze.getRows()*maze.getCols()), mana(0) {
 		map.setInitValue(MAP_FOG);
 		map.resize(2, 3);
+		moveCount.setInitValue(0);
+		moveCount.resize(2, 3);
+		++moveCount[0][1];
 		for(int row=0; row<2; ++row){
 			for(int col=0; col<3; ++col)
 				map[row][col] = maze[row][col];
@@ -33,4 +36,6 @@ public:
 	int getX(); // 자신의 현재위치 x를 반환
 	int getY(); // 자신의 현재위치 y를 반환
 	bool isEscapeMaze(); // 미로 탈출 여부 반환
+	int getHealth();
+	void printMap();
 };

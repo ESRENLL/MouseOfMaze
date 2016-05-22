@@ -23,6 +23,14 @@ public:
 			}
 		}
 	}
+	Matrix(const Matrix& other)  : mat(0), rows(0), cols(0), colsCap(0), initVal(0) {
+		this->resize(other.rows, other.cols);
+		for (int row = 0; row<other.rows; ++row) {
+			for (int col = 0; col<other.cols; ++col) {
+				mat[row][col] = other.mat[row][col];
+			}
+		}
+	}
 	~Matrix() {
 		free();
 	}

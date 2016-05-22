@@ -5,14 +5,30 @@
 
 #define MAX_COUNT 9999
 
-// LNK2019 빌드에러 발생으로 헤더 파일로 코드 이동
-//std::pair<int, int> routing(const Matrix& map, const Matrix& moveCount, int curX, int curY)
-//{
-//	// ADD : Matrix predictedValue = predictAlgo1 * predictAlgo2 * predictAlgo3;
-//	Matrix predictedValue;
-//	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
-//	return std::make_pair(maxRowCol.second, maxRowCol.first);
-//}
+Matrix Router::randomRouting(const Matrix& map, int curX, int curY)
+{
+	Matrix retMat;
+	retMat.setInitValue(0);
+	const int rows = map.getRows();
+	const int cols = map.getCols();
+	retMat.resize(rows, cols);
+	for(int row=0; row<rows; ++row){
+		for(int col=0; col<cols; ++col){
+			if(map[row][col] == MAP_EMPTY && (row!=curY || col!=curX))
+				retMat[row][col] = rand()%99+1;
+		}
+	}
+	return retMat;
+}
+
+std::pair<int, int> Router::routing(const Matrix& map, const Matrix& moveCount, int curX, int curY)
+{
+	// ADD : Matrix predictedValue = predictAlgo1 * predictAlgo2 * predictAlgo3;
+	Matrix predictedValue;
+	predictedValue = randomRouting(map, curX, curY);
+	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
+	return std::make_pair(maxRowCol.second, maxRowCol.first);
+}
 
 //define where is conjuction
 std::pair<int, int> Router::simpleRouting(const Matrix& map, const Matrix& moveCount, int curX, int curY)
@@ -78,19 +94,19 @@ std::pair<int, int> Router::howToGo(const Matrix& map, int curX, int curY, int x
 
 	const int beginCount = 10000;
 	const int dir[4][2] = { {1,0}, {0,1}, {-1,0}, {0,-1} }; // direction, (x,y)
-	std::stack< std::pair<int, int> > begin, next; // next (x,y)
+	std::stack< std::pair<int, int> > before, next; // next (x,y)
 	Matrix mapClone = map;
 
 	// find (x,y)
-	begin.push(std::make_pair(curX, curY));
-	mapClone[curX][curY] = beginCount;
+	before.push(std::make_pair(curX, curY));
+	mapClone[curY][curX] = beginCount;
 	while(true){
-		if(begin.empty()) return std::make_pair(0, 0); // cannot
+		if(before.empty()) return std::make_pair(0, 0); // cannot
 		
-		while(!begin.empty()) {
-			std::pair<int, int> top = begin.top();
+		while(!before.empty()) {
+			std::pair<int, int> top = before.top();
 			if(top.first==x && top.second==y) break;
-			begin.pop();
+			before.pop();
 			for(int d=0; d<4; ++d) {
 				int tx = top.first+dir[d][0];
 				int ty = top.second+dir[d][1];
@@ -100,8 +116,9 @@ std::pair<int, int> Router::howToGo(const Matrix& map, int curX, int curY, int x
 				}
 			}
 		}
-		if(!begin.empty()) break;
-		begin.swap(next);
+		if(!before.empty()) break;
+		if(next.empty()) return std::make_pair(0,0);
+		before.swap(next);
 	}
 	
 	// back from (x,y)

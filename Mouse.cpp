@@ -1,40 +1,47 @@
 #include "Mouse.h"
 #include <cstdio>
+#include <algorithm>
+#include <iostream>
 
 
 void Mouse::useTurn()
 {
 	std::pair<int, int> dst = router.routing(map, moveCount, curX, curY);
-	//std::pair<int, int> d_dst = router.howToGo(map, curX, curY, dst.first, dst.second);
-	//move(d_dst.first, d_dst.second);
-	while(mana>=10){
-		// ADD : check using MouseJR
-		// ADD : control MouseJR and scan
-	}
+	std::pair<int, int> d_dst = router.howToGo(map, curX, curY, dst.first, dst.second);
+	move(d_dst.first, d_dst.second);
+	//while(mana>=10){
+	//	// ADD : check using MouseJR
+	//	// ADD : control MouseJR and scan
+	//}
 }
 
 void Mouse::move(int dx, int dy)
 {
-	
 	this->curX = this->curX + dx;
 	this->curY = this->curY + dy;
 	this->mana++;
 	this->health--;
+	++moveCount[this->curY][this->curX];
 	
 	if(isEscapeMaze()){
 		// ADD : process when arrive the exit
 	}
 	else {
 		// update map can see
-		map.resize(curY+2, curX+2);
+		int resizeRows = std::max(map.getRows(), curY+2);
+		int resizeCols = std::max(map.getCols(), curX+2);
+		map.resize(resizeRows, resizeCols);
+		moveCount.resize(map.getRows(), map.getCols());
 		for(int dy=-1; dy<=1; ++dy){
-			for(int dx=-1; dx<=1; ++dx)
-				map[curY+dy][curX+dx] = maze[curY+dy][curX+dx];
+			for(int dx=-1; dx<=1; ++dx){
+				if(curY+dy>=0)
+					map[curY+dy][curX+dx] = maze[curY+dy][curX+dx];
+			}
 		}
 		if(this->health <= 0)
 		{	
-			printf("We failed to find the exit...\n");
-			exit(100);
+			//printf("We failed to find the exit...\n");
+			//exit(100);
 		}
 	}
 
@@ -68,5 +75,32 @@ int Mouse::getY()
 
 bool Mouse::isEscapeMaze()
 {
-	return curX==0 || (curY==0 && curX!=1) || curX==map.getCols()-1 || curY==map.getRows()-1;
+	return curX==0 || (curY==0 && curX!=1) || curX==maze.getCols()-1 || curY==maze.getRows()-1;
+}
+
+int Mouse::getHealth()
+{
+	return health;
+}
+
+void Mouse::printMap()
+{
+	const int rows = map.getRows();
+	const int cols = map.getCols();
+	for(int row=0; row<rows; ++row){
+		for(int col=0; col<cols; ++col){
+			char printChar;
+			if(row==curY && col==curX)
+				printChar = 'X';
+			else {
+				switch(map[row][col]){
+				case MAP_EMPTY:	printChar=moveCount[row][col]%10+'0';  break;
+				case MAP_WALL:	printChar='#'; break;
+				default:		printChar=' '; break;
+				}
+			}
+			std::cout << printChar << ' ';
+		}
+		std::cout << '\n';
+	}
 }

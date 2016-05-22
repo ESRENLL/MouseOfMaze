@@ -18,8 +18,11 @@ void Matrix::resizeRows(int rows){
 		int** newMat = new int*[rows];
 		for(int row=0; row<this->rows; ++row)
 			newMat[row] = mat[row];
-		for(int row=this->rows; row<rows; ++row)
+		for(int row=this->rows; row<rows; ++row){
 			newMat[row] = new int[colsCap];
+			for(int col=0; col<colsCap; ++col)
+				newMat[row][col] = initVal;
+		}
 		mat = newMat;
 		this->rows = rows;
 	}
