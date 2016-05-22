@@ -2,8 +2,78 @@
 #include "Mouse.h"
 
 #include <stack>
+#include <vector>
 
 #define MAX_COUNT 9999
+
+Matrix Router::tremauxRouting(const Matrix& map, const Matrix& moveCount, int curX, int curY)
+{
+	// moveCount==0 is higher value than 1
+	// moveCount>=2 is equal wall, except crossroad
+	// never back except dead-end road or cycle
+
+	const int dir[4][2] = { {0,1}, {1,0}, {0,-1}, {-1,0} };
+	Matrix retMat;
+	retMat.setInitValue(0);
+	retMat.resize(map.getRows(), map.getCols());
+	if(countAdjacentPath(map, curX, curY)==1 && moveCount[beginCurY][beginCurX]>=1){
+		// dead-end road
+		retMat[beginCurY][beginCurX] = 1;
+	}
+	else {
+		std::vector< std::pair<int,int> > adj; // adjacent empty (x,y)
+		for(int d=0; d<4; ++d){
+			int tx = curX + dir[d][0];
+			int ty = curY + dir[d][1];
+			if(map.isIn(ty, tx) && map[ty][tx]==MAP_EMPTY)
+				adj.push_back(std::make_pair(tx, ty));
+		}
+		int leastMcCondition = 1;
+		bool cycle = true;
+		for(int i=0; i<adj.size(); ++i){
+			leastMcCondition = std::min(leastMcCondition, moveCount[adj[i].second][adj[i].first]);
+			if(moveCount[adj[i].second][adj[i].first]!=1)
+				cycle = false;
+		}
+		// one more check cycle
+		if(cycle){
+			for(int i=0; i<adj.size(); ++i){
+				if(countAdjacentPath(map, adj[i].first, adj[i].second)==1){
+					cycle = false;
+					break;
+				}
+			}
+		}
+
+		if(cycle){
+			retMat[beginCurY][beginCurX] = 1;
+		}
+		else {
+			for(int i=0; i<adj.size(); ++i){
+				if(moveCount[adj[i].second][adj[i].first]<=leastMcCondition)
+					retMat[adj[i].second][adj[i].first] = 2;
+				else if(countAdjacentPath(map, adj[i].first, adj[i].second)>2)
+					retMat[adj[i].second][adj[i].first] = 1;
+			}
+			retMat[beginCurY][beginCurX] = 0;
+		}
+	}
+	
+	return retMat;
+}
+
+int Router::countAdjacentPath(const Matrix& map, int x, int y)
+{
+	const int dir[4][2] = { {0,1}, {1,0}, {0,-1}, {-1,0} };
+	int count = 0;
+	for(int d=0; d<4; ++d){
+		int tx = x+dir[d][0];
+		int ty = y+dir[d][1];
+		if( map.isIn(ty,tx) && map[ty][tx]==MAP_EMPTY )
+			++count;
+	}
+	return count;
+}
 
 Matrix Router::randomRouting(const Matrix& map, int curX, int curY)
 {
@@ -23,10 +93,14 @@ Matrix Router::randomRouting(const Matrix& map, int curX, int curY)
 
 std::pair<int, int> Router::routing(const Matrix& map, const Matrix& moveCount, int curX, int curY)
 {
+	// return (x, y)
+
 	// ADD : Matrix predictedValue = predictAlgo1 * predictAlgo2 * predictAlgo3;
 	Matrix predictedValue;
-	predictedValue = randomRouting(map, curX, curY);
+	predictedValue = tremauxRouting(map, moveCount, curX, curY);
 	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
+	beginCurX = curX;
+	beginCurY = curY;
 	return std::make_pair(maxRowCol.second, maxRowCol.first);
 }
 

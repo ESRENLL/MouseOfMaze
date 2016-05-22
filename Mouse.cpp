@@ -8,6 +8,7 @@ void Mouse::useTurn()
 {
 	std::pair<int, int> dst = router.routing(map, moveCount, curX, curY);
 	std::pair<int, int> d_dst = router.howToGo(map, curX, curY, dst.first, dst.second);
+	//printf("%d %d %d %d\n", dst.first, dst.second, d_dst.first, d_dst.second);
 	move(d_dst.first, d_dst.second);
 	//while(mana>=10){
 	//	// ADD : check using MouseJR

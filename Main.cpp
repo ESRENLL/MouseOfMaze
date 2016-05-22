@@ -6,8 +6,6 @@
 
 using namespace std;
 
-bool readMaze(Matrix& maze); // 미로를 읽어 maze에 저장하는 함수. 파일명은 stdin
-
 int main(void)
 {
 	MouseOfMazeSimulator simul;
@@ -16,11 +14,12 @@ int main(void)
 		string fileName;
 		cin >> fileName;
 		if( simul.readMap(fileName) ){
-			//simul.simulate(false, true, 300);
-			simul.simulate();
+			//simul.simulate(false, true, 200);
+			simul.simulate(false);
 		}
 		else
 			cout << " file open is failed!\n";
+		cout << '\n';
 	}
 	return -1;
 }

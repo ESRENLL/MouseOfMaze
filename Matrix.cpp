@@ -1,5 +1,5 @@
 #include "Matrix.h"
-
+#include <iostream>
 
 void Matrix::resize(int rows, int cols) {
 	resizeRows(rows);
@@ -160,4 +160,12 @@ std::pair<int, int> Matrix::getMaxRowCol() const
 bool Matrix::isIn(int row, int col) const
 {
 	return row>=0 && row<rows && col>=0 && col<cols;
+}
+void Matrix::print() const
+{
+	for(int row=0; row<rows; ++row){
+		for(int col=0; col<cols; ++col)
+			std::cout << mat[row][col] << ' ';
+		std::cout << '\n';
+	}
 }

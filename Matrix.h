@@ -54,4 +54,5 @@ public:
 	std::pair<int, int> getMinRowCol() const; // <row, col>
 	std::pair<int, int> getMaxRowCol() const; // <row, col>
 	bool isIn(int row, int col) const;
+	void print() const;
 };
