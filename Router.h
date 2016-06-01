@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Matrix.h"
-#include "Mouse.h"
 #include <cstdlib>
 #include <ctime>
 #include <utility>
@@ -10,7 +9,7 @@
 class Router {
 private:
 	std::stack< std::pair<int, int> > beginRowColStk; // begin (row, col)
-	int countAdjacent(const Matrix& map, int row, int col, MAPSTATE state);
+	int countAdjacentWall(const Matrix& map, int row, int col);
 public:
 	Router() {};
 	std::pair<int, int> tremauxRouting(const Matrix& map, const Matrix& moveCount, int curRow, int curCol); // return (row,col)

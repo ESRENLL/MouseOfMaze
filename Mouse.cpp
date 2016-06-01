@@ -8,7 +8,7 @@ void Mouse::useTurn()
 {
 	std::pair<int, int> ddst = router.tremauxRouting(map, moveCount, curRow, curCol);
 	//printf("%d %d %d %d\n", dst.first, dst.second, d_dst.first, d_dst.second);
-	move(ddst.first, ddst.second);
+	move(ddst.first, ddst.second);	
 	//while(mana>=10){
 	//	// ADD : check using MouseJR
 	//	// ADD : control MouseJR and scan
@@ -77,7 +77,7 @@ int Mouse::getCurCol()
 
 bool Mouse::isEscapeMaze()
 {
-	return curCol==0 || (curRow==0 && curRow!=1) || curCol==maze.getCols()-1 || curRow==maze.getRows()-1;
+	return curCol==0 || (curRow==0 && curCol!=1) || curCol==maze.getCols()-1 || curRow==maze.getRows()-1;
 }
 
 int Mouse::getHealth()

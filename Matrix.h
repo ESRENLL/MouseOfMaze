@@ -5,6 +5,8 @@
 // 행렬을 표현하는 클래스
 // 연산자 오버로딩과 크기재조정 기능
 
+enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
+
 class Matrix
 {
 private:

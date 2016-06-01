@@ -1,5 +1,4 @@
 #include "Router.h"
-#include "Mouse.h"
 
 #include <stack>
 #include <vector>
@@ -8,7 +7,7 @@
 
 std::pair<int, int> Router::tremauxRouting(const Matrix& map, const Matrix& moveCount, int curRow, int curCol)
 {
-	// return (row,col)
+	// return (drow,dcol)
 
 	Matrix predictedValue; // 3x3, [1][1] = current pos.
 	predictedValue.setInitValue(0);
@@ -21,7 +20,7 @@ std::pair<int, int> Router::tremauxRouting(const Matrix& map, const Matrix& move
 		int trow = curRow + dir[d][0];
 		int tcol = curCol + dir[d][1];
 		if(map.isIn(trow, tcol) && map[trow][tcol]==MAP_EMPTY && moveCount[trow][tcol]==0)
-			predictedValue[dir[d][0]][dir[d][1]] = 1;
+			predictedValue[dir[d][0]+1][dir[d][1]+1] = 1;
 	}
 	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
 	if(predictedValue[maxRowCol.first][maxRowCol.second]==0){
@@ -31,6 +30,8 @@ std::pair<int, int> Router::tremauxRouting(const Matrix& map, const Matrix& move
 			return std::make_pair(-1, -1);
 		maxRowCol = beginRowColStk.top();
 		beginRowColStk.pop();
+		maxRowCol.first = abs(maxRowCol.first-2);
+		maxRowCol.second = abs(maxRowCol.second-2);
 	}
 	else {
 		// adjacent moveCount==0 is exist
@@ -38,26 +39,27 @@ std::pair<int, int> Router::tremauxRouting(const Matrix& map, const Matrix& move
 
 		// prevent move to inner space
 		for(int d=0; d<4; ++d){
-			if(predictedValue[dir[d][0]][dir[d][1]]>0 && countAdjacent(map, curRow+dir[d][0], curCol+dir[d][1], MAP_WALL)==0)
-				predictedValue[dir[d][0]][dir[d][1]]=0;
+			if(predictedValue[dir[d][0]+1][dir[d][1]+1]>0){
+				int temp = 0;
+				std::swap(temp, predictedValue[dir[d][0]+1][dir[d][1]+1]);
+				for(int row=-1; row<=1; ++row){
+					for(int col=-1; col<=1; ++col){
+						int trow = curRow + dir[d][0] + row;
+						int tcol = curCol + dir[d][1] + col;
+						if(map.isIn(trow,tcol) && map[trow][tcol]==MAP_WALL){
+							predictedValue[dir[d][0]+1][dir[d][1]+1] = temp;
+							break;
+						}
+					}
+				}
+			}
 		}
 		maxRowCol = predictedValue.getMaxRowCol();
 		beginRowColStk.push(maxRowCol);
 	}
+	maxRowCol.first--;
+	maxRowCol.second--;
 	return maxRowCol;
-}
-
-int Router::countAdjacent(const Matrix& map, int row, int col, MAPSTATE state)
-{
-	const int dir[4][2] = { {0,1}, {1,0}, {0,-1}, {-1,0} };
-	int count = 0;
-	for(int d=0; d<4; ++d){
-		int trow = row+dir[d][0];
-		int tcol = col+dir[d][1];
-		if( map.isIn(trow,tcol) && map[trow][tcol]==state )
-			++count;
-	}
-	return count;
 }
 
 std::pair<int, int> Router::howToGo(const Matrix& map, int curRow, int curCol, int dstRow, int dstCol)

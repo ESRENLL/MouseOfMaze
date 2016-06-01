@@ -2,9 +2,6 @@
 
 #include "Matrix.h"
 #include "Router.h"
-#include "MouseJR.h"
-
-enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 
 class Mouse {
 private:
@@ -12,7 +9,6 @@ private:
 	Matrix map; // enum MAPSTATE { MAP_EMPTY=0, MAP_WALL, MAP_FOG };
 	Matrix moveCount; // 이동한 횟수(default 0)
 	Router router;
-	//MouseJR jr;
 	int curRow;
 	int curCol;
 	int health;
