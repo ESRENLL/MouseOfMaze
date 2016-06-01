@@ -6,37 +6,36 @@
 
 void Mouse::useTurn()
 {
-	std::pair<int, int> dst = router.routing(map, moveCount, curX, curY);
-	std::pair<int, int> d_dst = router.howToGo(map, curX, curY, dst.first, dst.second);
+	std::pair<int, int> ddst = router.tremauxRouting(map, moveCount, curRow, curCol);
 	//printf("%d %d %d %d\n", dst.first, dst.second, d_dst.first, d_dst.second);
-	move(d_dst.first, d_dst.second);
+	move(ddst.first, ddst.second);
 	//while(mana>=10){
 	//	// ADD : check using MouseJR
 	//	// ADD : control MouseJR and scan
 	//}
 }
 
-void Mouse::move(int dx, int dy)
+void Mouse::move(int drow, int dcol)
 {
-	this->curX = this->curX + dx;
-	this->curY = this->curY + dy;
+	this->curRow = this->curRow + drow;
+	this->curCol = this->curCol + dcol;
 	this->mana++;
 	this->health--;
-	++moveCount[this->curY][this->curX];
+	++moveCount[this->curRow][this->curCol];
 	
 	if(isEscapeMaze()){
 		// ADD : process when arrive the exit
 	}
 	else {
 		// update map can see
-		int resizeRows = std::max(map.getRows(), curY+2);
-		int resizeCols = std::max(map.getCols(), curX+2);
+		int resizeRows = std::max(map.getRows(), curRow+2);
+		int resizeCols = std::max(map.getCols(), curCol+2);
 		map.resize(resizeRows, resizeCols);
 		moveCount.resize(map.getRows(), map.getCols());
-		for(int dy=-1; dy<=1; ++dy){
-			for(int dx=-1; dx<=1; ++dx){
-				if(curY+dy>=0)
-					map[curY+dy][curX+dx] = maze[curY+dy][curX+dx];
+		for(int drow=-1; drow<=1; ++drow){
+			for(int dcol=-1; dcol<=1; ++dcol){
+				if(curRow+drow>=0)
+					map[curRow+drow][curCol+dcol] = maze[curRow+drow][curCol+dcol];
 			}
 		}
 		if(this->health <= 0)
@@ -48,35 +47,37 @@ void Mouse::move(int dx, int dy)
 
 }
 
-void Mouse::scan(int x, int y)
+void Mouse::scan(int row, int col)
 {
 	mana -= 10;
 
 	// update map scanned
-	for(int dy=-1; dy<=1; ++dy){
-		for(int dx=-1; dx<=1; ++dx){
-			if(maze.isIn(y+dy, x+dx))
-				map[y+dy][x+dx] = maze[y+dy][x+dx];
+	for(int drow=-1; drow<=1; ++drow){
+		for(int dcol=-1; dcol<=1; ++dcol){
+			if(maze.isIn(row+drow, col+dcol))
+				map[row+drow][col+dcol] = maze[row+drow][col+dcol];
 			// 맵 범위를 벗어나면 맵 테두리를 알 수 있다.
 			// 이를 통해 출구를 발견할 수 있는데, 이를 쥐는 현재 알 방법이 없다.
-			// 방법??
+			// 방법?? ==> row한계에 달하면 row한계를 담는 변수에 한계값 대입(초기값 -1로 미발견 구별)?
+			//			col도 마찬가지.?
+			//			출구를 발견하면 출구 변수에 값 대입.(초기값 -1로 미발견 구별?
 		}
 	}
 }
 
-int Mouse::getX()
+int Mouse::getCurRow()
 {
-	return this->curX;
+	return this->curRow;
 }
 
-int Mouse::getY()
+int Mouse::getCurCol()
 {
-	return this->curY;
+	return this->curCol;
 }
 
 bool Mouse::isEscapeMaze()
 {
-	return curX==0 || (curY==0 && curX!=1) || curX==maze.getCols()-1 || curY==maze.getRows()-1;
+	return curCol==0 || (curRow==0 && curRow!=1) || curCol==maze.getCols()-1 || curRow==maze.getRows()-1;
 }
 
 int Mouse::getHealth()
@@ -91,7 +92,7 @@ void Mouse::printMap()
 	for(int row=0; row<rows; ++row){
 		for(int col=0; col<cols; ++col){
 			char printChar;
-			if(row==curY && col==curX)
+			if(row==curRow && col==curCol)
 				printChar = 'X';
 			else {
 				switch(map[row][col]){
