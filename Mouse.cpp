@@ -49,20 +49,77 @@ void Mouse::move(int drow, int dcol)
 
 void Mouse::scan(int row, int col)
 {
+if(not mana >= 10){
+		return;
+	}
 	mana -= 10;
 
-	// update map scanned
-	for(int drow=-1; drow<=1; ++drow){
-		for(int dcol=-1; dcol<=1; ++dcol){
-			if(maze.isIn(row+drow, col+dcol))
-				map[row+drow][col+dcol] = maze[row+drow][col+dcol];
-			// 맵 범위를 벗어나면 맵 테두리를 알 수 있다.
-			// 이를 통해 출구를 발견할 수 있는데, 이를 쥐는 현재 알 방법이 없다.
-			// 방법?? ==> row한계에 달하면 row한계를 담는 변수에 한계값 대입(초기값 -1로 미발견 구별)?
-			//			col도 마찬가지.?
-			//			출구를 발견하면 출구 변수에 값 대입.(초기값 -1로 미발견 구별?
+	bool flagE = false;	// flag about finding exit point
+	bool flagR = false; // if end searching about rows
+	bool flagC = false;
+	// scan point
+	int prevRow=1;
+	int row=1;
+	int prevCol=0;
+	int col=0;
+	while(true){
+		if(flagE){	// if found exit
+			srand(time(NULL));
+			while(map[row][col] != MAP_FOG){
+				row = rand() % (map.getRows() - 3) + 1;
+				col = rand() % (map.getCols() - 3) + 1;
+			}
+		}
+		else{ // if didnt found exit
+			try{
+				if(!flagR && !flagC) // map's left side
+					row++;
+				else if(flagR && !flagC)	//map's down side
+					col++;
+				else if(flagR && flagC)	// map's right side
+					row--;
+				else
+					col--;	//map's up side
+
+				if(map[row][col] == MAP_FOG && map[prevRow][prevCol] == MAP_FOG)
+					break;
+				prevRow = row;
+				prevCol = col;
+				if(flagR && row == 0)
+					flagR = false;
+				if(!flagR && row == maze.getRows()-1)
+					flagR = true;
+				if(!flagC && col == maze.getCols()-1)
+					flagC = true;
+				if(map[row][col] == MAP_EMPTY)
+					flagE = true;
+			}
+			catch(const std::out_of_range& oor){ // if point is out of range
+					if(row > map.getRows()){
+						int resizeRows = std::max(map.getRows(), row+1);
+						int resizeCols = std::max(map.getCols(), col);
+						map.resize(resizeRows, resizeCols);
+					}
+					if (col > map.getCols()) {
+						int resizeRows = std::max(map.getRows(), row);
+						int resizeCols = std::max(map.getCols(), col + 1);
+						map.resize(resizeRows, resizeCols);
+					}
+			}
 		}
 	}
+	/*/
+	// update map scanned
+	for(int dy=-1; dy<=1; ++dy){
+		for(int dx=-1; dx<=1; ++dx){
+			if(maze.isIn(y+dy, x+dx))
+				map[y+dy][x+dx] = maze[y+dy][x+dx];
+			// 맵 범위를 벗어나면 맵 테두리를 알 수 있다.
+			// 이를 통해 출구를 발견할 수 있는데, 이를 쥐는 현재 알 방법이 없다.
+			// 방법??
+		}
+	}
+	*/
 }
 
 int Mouse::getCurRow()
