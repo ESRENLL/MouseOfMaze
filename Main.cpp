@@ -15,7 +15,7 @@ int main(void)
 	int autoSimulRows = 50;
 	int autoSimulCols = 50;
 	int autoSimulPunch = -1; // <0 ... auto
-	bool simulSimple = false;
+	bool simulSimple = true;
 	int simulInterval = 200;
 	while(true){
 		cout << "----------------------menu-------------------------\n";
