@@ -73,10 +73,22 @@ void Mouse::scan(int row, int col)
 			else if(trow>=maze.getRows()) {
 				// discover maze rows end
 				mazeRows = maze.getRows();
+				for(int col=0; col<3; ++col){
+					if(isEndOfMaze(mazeRows-1, col, mazeRows, mazeCols)){
+						exitRow = mazeRows-1;
+						exitCol = col;
+					}
+				}
 			}
 			else if(tcol>=maze.getCols()) {
 				// discover maze cols end
 				mazeCols = maze.getCols();
+				for(int row=mazeRows-3; row<mazeRows; ++row){
+					if(isEndOfMaze(row, mazeCols-1, mazeRows, mazeCols)){
+						exitRow = row;
+						exitCol = mazeCols-1;
+					}
+				}
 			}
 		}
 	}
@@ -147,17 +159,7 @@ std::pair<int, int> Mouse::tremauxRouting()
 			predictedValue[dir[d][0]+1][dir[d][1]+1] = 1;
 	}
 	std::pair<int, int> maxRowCol = predictedValue.getMaxRowCol();
-	if(predictedValue[maxRowCol.first][maxRowCol.second]==0){
-		// adjacent moveCount==0 is not exist
-		// just back to stk
-		if(beginRowColStk.empty()) // no exit
-			return std::make_pair(-1, -1);
-		maxRowCol = beginRowColStk.top();
-		beginRowColStk.pop();
-		maxRowCol.first = abs(maxRowCol.first-2);
-		maxRowCol.second = abs(maxRowCol.second-2);
-	}
-	else {
+	if(predictedValue[maxRowCol.first][maxRowCol.second]>0){
 		// adjacent moveCount==0 is exist
 		// apply other algo, select
 
@@ -179,8 +181,20 @@ std::pair<int, int> Mouse::tremauxRouting()
 			}
 		}
 		maxRowCol = predictedValue.getMaxRowCol();
-		beginRowColStk.push(maxRowCol);
 	}
+	if(predictedValue[maxRowCol.first][maxRowCol.second]==0){
+		// adjacent moveCount==0 is not exist
+		// just back to stk
+		if(beginRowColStk.empty()) // no exit
+			return std::make_pair(-1, -1);
+		maxRowCol = beginRowColStk.top();
+		beginRowColStk.pop();
+		maxRowCol.first = abs(maxRowCol.first-2);
+		maxRowCol.second = abs(maxRowCol.second-2);
+	}
+	else
+		beginRowColStk.push(maxRowCol);
+
 	maxRowCol.first--;
 	maxRowCol.second--;
 	return maxRowCol;

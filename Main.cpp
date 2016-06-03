@@ -14,7 +14,7 @@ int main(void)
 	bool autoSimulation = true;
 	int autoSimulRows = 50;
 	int autoSimulCols = 50;
-	int autoSimulPunch = -1; // <0 ... auto
+	int autoSimulPunch = 500; // <0 ... auto
 	bool simulSimple = true;
 	int simulInterval = 200;
 	while(true){
@@ -27,7 +27,7 @@ int main(void)
 		int menu=-1;
 		cin >> menu;
 		if(menu==0) {
-			cout << "program is ended successfully...\n";
+			cout << "program is terminated successfully...\n";
 			return 0;
 		}
 		else if(menu==1) {
