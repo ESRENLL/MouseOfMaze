@@ -29,15 +29,14 @@ bool MouseOfMazeSimulator::readMap(std::string fileName)
 	ifs.close();
 	return true;
 }
-void MouseOfMazeSimulator::simulate(bool simple, bool observe, int observeInterval)
+void MouseOfMazeSimulator::simulate(bool simple, int observeInterval)
 {
 	std::cout << " -- simulate start -- \n";
 	clock_t beginClock = clock();
-	if(simple) observe=false;
 	Mouse mouse(maze);
 	int elapsedTurn = 0;
 	while(mouse.getHealth()>0 && !mouse.isEscapeMaze()){
-		if(observe){
+		if(!simple){
 			mouse.printMap();
 			std::cout << '\n';
 			Sleep(observeInterval);
@@ -47,10 +46,8 @@ void MouseOfMazeSimulator::simulate(bool simple, bool observe, int observeInterv
 	}
 	std::cout << " -- simulate end --, simulated time : " << clock()-beginClock << "(ms)\n";
 
-	if(!simple) {
-		std::cout << '\n';
-		mouse.printMap();
-	}
+	std::cout << '\n';
+	mouse.printMap();
 	if(mouse.isEscapeMaze())
 		std::cout << " Mouse is escaped maze!\n";
 	else

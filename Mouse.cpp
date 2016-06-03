@@ -266,7 +266,7 @@ std::pair<int, int> Mouse::searchScanPoint()
 						ret.second = tcol + tcol - top.second;
 						return ret;
 					}
-					else if(chkPushed[trow][tcol]!=pushed){
+					else if(chkPushed[trow][tcol]!=pushed && map[trow][tcol]==MAP_EMPTY){
 						chkPushed[trow][tcol] = pushed;
 						dfs.push(std::make_pair(trow, tcol));
 					}
@@ -276,24 +276,40 @@ std::pair<int, int> Mouse::searchScanPoint()
 	}
 	else if(mazeRows<0) {
 		// search exit to left side(top->bottom)
-		ret.first = beginScanRow + 3;
+		ret.first = beginScanRow;
 		ret.second = 0;
+		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
+			++ret.first;
+		}
+		++ret.first;
 	}
 	else if(mazeCols<0) {
 		// search exit to down side(left->right)
 		ret.first = mazeRows-1;
-		ret.second = beginScanCol + 3;
+		ret.second = beginScanCol;
+		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
+			++ret.second;
+		}
+		++ret.second;
 	}
 	else if(beginScanRow>0) {
 		// search exit to right side(bottom->top)
-		ret.first = beginScanRow - 3;
-		if(ret.first<0) ret.first = 0;
+		ret.first = beginScanRow;
 		ret.second = mazeCols-1;
+		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
+			--ret.first;
+		}
+		--ret.first;
+		if(ret.first<0) ret.first = 0;
 	}
 	else {
 		// search exit to top side(right->left)
 		ret.first = 0;
-		ret.second = beginScanCol - 3;
+		ret.second = beginScanCol;
+		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
+			--ret.second;
+		}
+		--ret.second;
 		if(ret.second<0) ret.second = 0;
 	}
 	return ret;

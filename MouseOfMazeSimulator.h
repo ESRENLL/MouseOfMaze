@@ -8,6 +8,6 @@ private:
 	Matrix maze;
 public:
 	bool readMap(std::string fileName);
-	void simulate(bool simple=true, bool observe=false, int observeInterval=300);
+	void simulate(bool simple=true, int observeInterval=300);
 	Matrix getMaze();
 };
