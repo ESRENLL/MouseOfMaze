@@ -277,7 +277,7 @@ std::pair<int, int> Mouse::searchScanPoint()
 	else if(mazeRows<0) {
 		// search exit to left side(top->bottom)
 		ret.first = beginScanRow;
-		ret.second = 0;
+		ret.second = 1;
 		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
 			++ret.first;
 		}
@@ -285,7 +285,7 @@ std::pair<int, int> Mouse::searchScanPoint()
 	}
 	else if(mazeCols<0) {
 		// search exit to down side(left->right)
-		ret.first = mazeRows-1;
+		ret.first = mazeRows-2;
 		ret.second = beginScanCol;
 		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
 			++ret.second;
@@ -295,7 +295,7 @@ std::pair<int, int> Mouse::searchScanPoint()
 	else if(beginScanRow>0) {
 		// search exit to right side(bottom->top)
 		ret.first = beginScanRow;
-		ret.second = mazeCols-1;
+		ret.second = mazeCols-2;
 		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
 			--ret.first;
 		}
@@ -304,7 +304,7 @@ std::pair<int, int> Mouse::searchScanPoint()
 	}
 	else {
 		// search exit to top side(right->left)
-		ret.first = 0;
+		ret.first = 1;
 		ret.second = beginScanCol;
 		while(map.isIn(ret.first, ret.second) && map[ret.first][ret.second]!=MAP_FOG){
 			--ret.second;
