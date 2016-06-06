@@ -119,7 +119,7 @@ int Mouse::getHealth()
 	return health;
 }
 
-void Mouse::printMap()
+void Mouse::printMap(std::ostream& out)
 {
 	const int rows = map.getRows();
 	const int cols = map.getCols();
@@ -135,9 +135,9 @@ void Mouse::printMap()
 				default:		printChar=' '; break;
 				}
 			}
-			std::cout << printChar << ' ';
+			out << printChar << ' ';
 		}
-		std::cout << '\n';
+		out << '\n';
 	}
 }
 

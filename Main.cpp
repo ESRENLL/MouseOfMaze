@@ -17,6 +17,8 @@ int main(void)
 	int autoSimulPunch = 500; // <0 ... auto
 	bool simulSimple = true;
 	int simulInterval = 200;
+	ostream* out = &(std::cout);
+	string filename = "console";
 	while(true){
 		cout << "----------------------menu-------------------------\n";
 		cout << "0 : exit program\n";
@@ -31,6 +33,10 @@ int main(void)
 			return 0;
 		}
 		else if(menu==1) {
+			if(filename == "console")
+				out = &(std::cout);
+			else
+				out = new ofstream(filename);
 			if(autoSimulation) {
 				MazeGenerator mg(autoSimulRows, autoSimulCols);
 				mg.initialize();
@@ -38,19 +44,21 @@ int main(void)
 				mg.punch_a_maze(autoSimulPunch);
 				mg.print_file(defaultFile.c_str());
 				simul.readMap(defaultFile);
-				simul.simulate(simulSimple, simulInterval);
+				simul.simulate(simulSimple, simulInterval, *out);
 			}
 			else {
 				cout << "input maze file name : ";
 				string fileName;
 				cin >> fileName;
 				if( simul.readMap(fileName) ){
-					simul.simulate(simulSimple, simulInterval);
+					simul.simulate(simulSimple, simulInterval, *out);
 				}
 				else
 					cout << " file open is failed!\n";
 				cout << '\n';
 			}
+			if(out!=&(std::cout))
+				delete out;
 		}
 		else if(menu==2) {
 			int rows=50, cols=50, punch=0;
@@ -81,6 +89,8 @@ int main(void)
 				cout << "set simulation turns interval : ";
 				cin >> simulInterval;
 			}
+			cout << "out file name(console=console) : ";
+			cin >> filename;
 		}
 		else {
 			cout << " menu select error!\n";

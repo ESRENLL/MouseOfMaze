@@ -3,6 +3,7 @@
 #include "Matrix.h"
 #include <utility>
 #include <stack>
+#include <iostream>
 
 class Mouse {
 private:
@@ -51,5 +52,5 @@ public:
 	int getCurCol(); // 자신의 현재위치 y를 반환
 	bool isEscapeMaze(); // 미로 탈출 여부 반환
 	int getHealth();
-	void printMap();
+	void printMap(std::ostream& out = std::cout);
 };

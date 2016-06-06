@@ -29,7 +29,7 @@ bool MouseOfMazeSimulator::readMap(std::string fileName)
 	ifs.close();
 	return true;
 }
-void MouseOfMazeSimulator::simulate(bool simple, int observeInterval)
+void MouseOfMazeSimulator::simulate(bool simple, int observeInterval, std::ostream& out)
 {
 	std::cout << " -- simulate start -- \n";
 	clock_t beginClock = clock();
@@ -38,7 +38,7 @@ void MouseOfMazeSimulator::simulate(bool simple, int observeInterval)
 	while(mouse.getHealth()>0 && !mouse.isEscapeMaze()){
 		if(!simple){
 			mouse.printMap();
-			std::cout << '\n';
+			out << '\n';
 			Sleep(observeInterval);
 		}
 		mouse.useTurn();
@@ -46,14 +46,14 @@ void MouseOfMazeSimulator::simulate(bool simple, int observeInterval)
 	}
 	std::cout << " -- simulate end --, simulated time : " << clock()-beginClock << "(ms)\n";
 
-	std::cout << '\n';
-	mouse.printMap();
+	out << '\n';
+	mouse.printMap(out);
 	if(mouse.isEscapeMaze())
-		std::cout << " Mouse is escaped maze!\n";
+		out << " Mouse is escaped maze!\n";
 	else
 		std::cout << " Mouse is dead...\n";
-	std::cout << " Elapsed turn : " <<  elapsedTurn << '\n';
-	std::cout << " Remain health : " << mouse.getHealth() << '\n';
+	out << " Elapsed turn : " <<  elapsedTurn << '\n';
+	out << " Remain health : " << mouse.getHealth() << '\n';
 }
 Matrix MouseOfMazeSimulator::getMaze()
 {
